@@ -91,11 +91,7 @@ class LineAPI
     {
         try
         { 
-            require "vendor/autoload.php";
-            //require_once('vendor/linecorp/line-bot-sdk/line-bot-sdk-tiny/LINEBotTiny.php');
-
-            //$access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
-require "vendor/autoload.php";
+        /*    require "vendor/autoload.php";
 $access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
 $channelSecret = 'xxxxx';
 $idPush = 'xxxxxx'
@@ -104,9 +100,9 @@ $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $channelSecret]);
 $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hello world');
 $response = $bot->pushMessage($idPush, $textMessageBuilder);
 
-return $response->getHTTPStatus() . ' ' . $response->getRawBody();
+return $response->getHTTPStatus() . ' ' . $response->getRawBody();*/
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
-            //return ($oText);
+            return ($oText);
         }
         catch( Exception $e )
         {
