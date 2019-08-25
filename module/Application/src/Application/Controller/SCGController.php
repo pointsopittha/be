@@ -90,8 +90,7 @@ class SCGController extends AbstractActionController
             print_r($e);
         }
     }
-################################################################################
-    
+################################################################################   
     public function lineAction() 
     {
         try
@@ -139,7 +138,24 @@ class SCGController extends AbstractActionController
             print_r($e);
         }
     }
-    
+################################################################################   
+    public function callbackAction() 
+    {
+        try
+        {
+            $view = $this->basic();
+            $models = new LineAPI($this->adapter, $view->id, $view->page);
+            
+                $view->lineResult = $models->sendMsg();
+                //$this->redirect()->toRoute('index', ['action'=>'line']);
+           
+            return $view;
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    }    
 ################################################################################
     public function scgAction() 
     {

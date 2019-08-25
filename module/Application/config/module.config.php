@@ -109,6 +109,7 @@ return array(
             'application/scg/find' => __DIR__ . '/../view/scg/find.phtml',
             'application/scg/line' => __DIR__ . '/../view/scg/line.phtml',
             'application/scg/cv' => __DIR__ . '/../view/scg/cv.phtml',
+            'application/scg/callback' => __DIR__ . '/../view/scg/callback.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
@@ -136,12 +137,12 @@ return array(
     
     'Db' => array(
         'driver' => 'Pdo',
-        'dsn' => 'mysql:dbname=scg;host=localhost',   
+        'dsn' => 'mysql:dbname=test;host=172.21.4.19:3306',   
         'driver_options' => array( 
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         ),
-        'username' => 'root',
-        'password' => 'P@ssw0rd', 
+        'username' => 'sopittha',
+        'password' => 'p@ssw0rd', 
     ),
     
     'service_manager' => array( 

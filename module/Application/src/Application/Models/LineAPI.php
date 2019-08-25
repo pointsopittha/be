@@ -91,18 +91,52 @@ class LineAPI
     {
         try
         { 
-        /*    require "vendor/autoload.php";
-$access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
-$channelSecret = 'xxxxx';
-$idPush = 'xxxxxx'
-$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($access_token);
-$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $channelSecret]);
-$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hello world');
-$response = $bot->pushMessage($idPush, $textMessageBuilder);
 
-return $response->getHTTPStatus() . ' ' . $response->getRawBody();*/
+require "vendor/autoload.php";
+require_once('vendor/linecorp/line-bot-sdk/line-bot-sdk-tiny/LINEBotTiny.php');
+$access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
+// Get POST body content
+$content = file_get_contents('php://input');
+// Parse JSON
+$events = json_decode($content, true);
+// Validate parsed JSON data
+if (!is_null($events['events'])) {
+// Loop through each event
+foreach ($events['events'] as $event) {
+// Reply only when message sent is in 'text' format
+if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
+// Get text sent
+$text = $event['source']['userId'];
+// Get replyToken
+$replyToken = $event['replyToken'];
+// Build message to reply back
+$messages = [
+'type' => 'text',
+'text' => $text
+];
+// Make a POST Request to Messaging API to reply to sender
+$url = 'https://api.line.me/v2/bot/message/reply';
+$data = [
+'replyToken' => $replyToken,
+'messages' => [$messages],
+];
+$post = json_encode($data);
+$headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$result = curl_exec($ch);
+curl_close($ch);
+return $result . "\r\n";
+}
+}
+}
+return "OK";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
-            return ($oText);
+            //return ($oText);
         }
         catch( Exception $e )
         {
