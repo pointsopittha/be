@@ -53,7 +53,19 @@ class SCGController extends AbstractActionController
         
         return $view;
     } 
-    
+################################################################################
+    public function cvAction() 
+    {
+        try
+        {
+            $view = $this->basic();
+            return $view;
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    }    
 ################################################################################
     
     public function findAction() 
@@ -110,6 +122,11 @@ class SCGController extends AbstractActionController
                 $models->del();
                 $this->redirect()->toRoute('index', ['action'=>'line']);
             }*/
+            else if($act == 'send')
+            {
+                $view->lineResult = $models->sendMsg();
+                $this->redirect()->toRoute('index', ['action'=>'line']);
+            }
             else
             {
                 $view->data = $models->getList();

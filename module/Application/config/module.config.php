@@ -108,6 +108,7 @@ return array(
             'application/scg/index' => __DIR__ . '/../view/scg/index.phtml',
             'application/scg/find' => __DIR__ . '/../view/scg/find.phtml',
             'application/scg/line' => __DIR__ . '/../view/scg/line.phtml',
+            'application/scg/cv' => __DIR__ . '/../view/scg/cv.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
