@@ -1,0 +1,12 @@
+<div class="container" style="margin-top:10px;">
+	<div class="jumbotron">
+		<h1>index index <?=$this->translate('hello');?>, ZF3!</h1>
+		<p></p>
+		<!-- <p><a class="btn btn-primary btn-lg" href="<?=$this->url('home');?><?=$this->lang;?>/user/" role="button"><?=$this->translate('learn more');?></a></p> -->
+        <p><a class="btn btn-primary btn-lg" href="<?= $this->url('index', ['action' => 'user']); ?>" role="button"><?=$this->translate('learn more');?></a></p>
+        
+        
+        <!--<p> finding X, Y, Z value from <?=$this->settext;?></p>
+        <p><?=$this->foundtext;?></p>-->
+	</div>
+</div>
