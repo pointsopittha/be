@@ -28,6 +28,7 @@ class LineAPI
         $this->pageStart = ($this->perpage*($this->page-1));
         $this->now = date('Y-m-d H:i');
         $this->ip = '';
+        $this->access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
         if (getenv('HTTP_CLIENT_IP'))
         {
             $this->ip = getenv('HTTP_CLIENT_IP');
@@ -87,54 +88,58 @@ class LineAPI
         return($sql->execute());
     }
 ################################################################################    
-    function sendMsg($iText='')
+    function callbackUser($itext)
     {
         try
         { 
 
-require "vendor/autoload.php";
-require_once('vendor/linecorp/line-bot-sdk/line-bot-sdk-tiny/LINEBotTiny.php');
-$access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
-// Get POST body content
-$content = file_get_contents('php://input');
-// Parse JSON
-$events = json_decode($content, true);
-// Validate parsed JSON data
-if (!is_null($events['events'])) {
-// Loop through each event
-foreach ($events['events'] as $event) {
-// Reply only when message sent is in 'text' format
-if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
-// Get text sent
-$text = $event['source']['userId'];
-// Get replyToken
-$replyToken = $event['replyToken'];
-// Build message to reply back
-$messages = [
-'type' => 'text',
-'text' => $text
-];
-// Make a POST Request to Messaging API to reply to sender
-$url = 'https://api.line.me/v2/bot/message/reply';
-$data = [
-'replyToken' => $replyToken,
-'messages' => [$messages],
-];
-$post = json_encode($data);
-$headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-$result = curl_exec($ch);
-curl_close($ch);
-return $result . "\r\n";
-}
-}
-}
-return "OK";
+            require "vendor/autoload.php";
+            require_once('vendor/linecorp/line-bot-sdk/line-bot-sdk-tiny/LINEBotTiny.php');
+            
+            // Get POST body content
+            $content = file_get_contents('php://input');
+            // Parse JSON
+            $events = json_decode($content, true);
+            // Validate parsed JSON data
+            if (!is_null($events['events'])) 
+            {
+                // Loop through each event
+                foreach ($events['events'] as $event) 
+                {
+                // Reply only when message sent is in 'text' format
+                    if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
+                    {
+                        // Get text sent
+                        $text = $event['source']['userId'];
+                        // Get replyToken
+                        $replyToken = $event['replyToken'];
+                        // Build message to reply back
+                        $messages = [
+                        'type' => 'text',
+                        'text' => $itext
+                        ];
+                        // Make a POST Request to Messaging API to reply to sender
+                        $url = 'https://api.line.me/v2/bot/message/reply';
+                        $data = [
+                        'replyToken' => $replyToken,
+                        'messages' => [$messages],
+                        ];
+                        $post = json_encode($data);
+                        $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
+                        $ch = curl_init($url);
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                        $result = curl_exec($ch);
+                        curl_close($ch);
+                        return $result . "\r\n";
+                        //return $result;
+                    }
+                }
+            }
+            return "OK";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
@@ -144,11 +149,40 @@ return "OK";
         }
     }
 ################################################################################    
-    function Apiservice($service='', $parameter = [], $type='get')
+    function replyMsg($idPush='',$replymsg='')
+    {
+        try
+        { 
+/*
+            require "vendor/autoload.php";
+            //$access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
+            $channelSecret = 'bcc7ab382cd4718d958bf9ea9eb3580f';
+            $idPush = 'U4dcee7cf9fb7bb2f9eb2f32603d5bc64'
+            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->access_token);
+            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $channelSecret]);
+            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($replymsg);
+            $response = $bot->pushMessage($idPush, $textMessageBuilder);
+            
+            return $response->getHTTPStatus() . ' ' . $response->getRawBody();
+            */
+            //return "OK";
+            //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
+            //return ($oText);
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    }
+################################################################################    
+    function Apiservice($service='', $parameter = [], $type='post')
     {   
         try
         {
-            $url= 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyAP4ExPP9WsZav-lGimhJ71omKqiQU4Xb0&query=bangsue&region=th&type=restaurant';
+            $url= 'https://api.line.me/v2/bot/message/push';
+           
+            //$pre_para='{"to": "U4dcee7cf9fb7bb2f9eb2f32603d5bc64","messages":[{"type":"text","text":"Hello, world1"},{"type":"text","text":"Hello, world2"}]}';
+            
           
             //echo $url;
             $client = new Client($url, array(  
@@ -156,6 +190,7 @@ return "OK";
                 'sslcapath' => '/etc/ssl/certs'
             )); 
             if($type=='post'){  
+                //$headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                 $client->setMethod(Request::METHOD_POST);
                 $client->setParameterPost($parameter); 
             }
