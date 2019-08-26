@@ -120,9 +120,9 @@ class LineAPI
             $events = json_decode($content, true);
             $post='';
             
-            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('callbackUser','1')";
-            $query = $this->adapter->query($sql);
-            $query->execute();
+//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('callbackUser','1')";
+//            $query = $this->adapter->query($sql);
+//            $query->execute();
             
             // Validate parsed JSON data
             if (!is_null($events['events'])) 
@@ -167,7 +167,7 @@ class LineAPI
                         
                         $post = getDetailFromText($event['message']['text'],$replyToken);
                         
-                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$replyToken','5')";
+                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$post','5')";
                         $query = $this->adapter->query($sql);
                         $query->execute();
                             
@@ -191,7 +191,10 @@ class LineAPI
         }
         catch( Exception $e )
         {
-            print_r($e);
+            //print_r($e);
+            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
         }
     }
 ################################################################################    
