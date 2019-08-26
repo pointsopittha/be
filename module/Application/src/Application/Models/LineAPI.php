@@ -144,13 +144,15 @@ class LineAPI
                             'messages' => [$messages],
                         ];*/
                         //$post = json_encode($data);
+                        $logtext = $replyToken.$post.$event['message']['text'];
+                        $sql = $this->adapter->query("INSERT INTO log_action (logdesc,logaction) VALUES ('".$logtext."','getDetailFromText');");
+                        $resultsexecute = $query->execute();
+                        
                         $post = getDetailFromText($event['message']['text'],$replyToken);
                         
                         //log
                         //$id = $this->getNextId();
-                        $logtext = $replyToken.$post.$event['message']['text'];
-                        $sql = $this->adapter->query("INSERT INTO log_action (logdesc,logaction) VALUES ('".$logtext."','getDetailFromText');");
-                        $resultsexecute = $query->execute();
+                        
                             
                         //return();
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
