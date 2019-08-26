@@ -120,7 +120,7 @@ class LineAPI
             $events = json_decode($content, true);
             $post='';
             
-//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('callbackUser','1')";
+//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$events','1')";
 //            $query = $this->adapter->query($sql);
 //            $query->execute();
             
@@ -128,9 +128,9 @@ class LineAPI
             if (!is_null($events['events'])) 
             {
                 
-                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifevents','2')";
-                $query = $this->adapter->query($sql);
-                $query->execute();
+//                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifevents','2')";
+//                $query = $this->adapter->query($sql);
+//                $query->execute();
                 
                 // Loop through each event
                 foreach ($events['events'] as $event) 
@@ -138,10 +138,10 @@ class LineAPI
                     // Reply only when message sent is in 'text' format
                     if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
                     {
-                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifmessage','3')";
-                        $query = $this->adapter->query($sql);
-                        $query->execute();
-                        
+//                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifmessage','3')";
+//                        $query = $this->adapter->query($sql);
+//                        $query->execute();
+//                        
                         
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         // Get userId
@@ -149,7 +149,7 @@ class LineAPI
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
-                        /*  $messages = [
+                          $messages = [
                             'type' => 'text',
                             'text' => $event['message']['text']
                             ];
@@ -157,20 +157,20 @@ class LineAPI
                         $data = [
                             'replyToken' => $replyToken,
                             'messages' => [$messages],
-                        ];*/
-                        //$post = json_encode($data);
+                        ];
+                        $post = json_encode($data);
                         //$logtext = $replyToken.$post.$event['message']['text'];
                         
-                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$replyToken','4')";
-                        $query = $this->adapter->query($sql);
-                        $query->execute();
+//                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$replyToken','4')";
+//                        $query = $this->adapter->query($sql);
+//                        $query->execute();
                         
-                        $post = getDetailFromText($event['message']['text'],$replyToken);
+                        //$post = getDetailFromText($event['message']['text'],$replyToken);
                         
-                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$post','5')";
-                        $query = $this->adapter->query($sql);
-                        $query->execute();
-                            
+//                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$post','5')";
+//                        $query = $this->adapter->query($sql);
+//                        $query->execute();
+//                            
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -188,19 +188,20 @@ class LineAPI
             else
             {
                 $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('event null','0')";
-                        $query = $this->adapter->query($sql);
-                        $query->execute();
+                $query = $this->adapter->query($sql);
+                $query->execute();
             }
-            return "OK9";
+            return "OK10";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
         catch( Exception $e )
         {
-            //print_r($e);
-            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
-                        $query = $this->adapter->query($sql);
-                        $query->execute();
+            print_r($e);
+            error_log($e, 1,"point.sopittha@gmail.com");
+//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
+//                        $query = $this->adapter->query($sql);
+//                        $query->execute();
         }
     }
 ################################################################################    
