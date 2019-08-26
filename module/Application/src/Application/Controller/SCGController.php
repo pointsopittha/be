@@ -146,8 +146,8 @@ class SCGController extends AbstractActionController
             $view = $this->basic();
             $models = new LineAPI($this->adapter, $view->id, $view->page);
             
-            $view->lineResult = $models->callbackUser();
-            //$view->lineResult = $models->getDetailFromText('promotion');
+            //$view->lineResult = $models->callbackUser();
+            $view->lineResult = $models->getDetailFromText('news');
             // = replyMsg('U4dcee7cf9fb7bb2f9eb2f32603d5bc64','hi');
                 //$this->redirect()->toRoute('index', ['action'=>'line']);
            
