@@ -120,9 +120,7 @@ class LineAPI
             $events = json_decode($content, true);
             $post='';
             
-            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$events','1')";
-            $query = $this->adapter->query($sql);
-            $query->execute();
+            
             
             // Validate parsed JSON data
             if (!is_null($events['events'])) 
@@ -138,10 +136,10 @@ class LineAPI
                     // Reply only when message sent is in 'text' format
                     if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
                     {
-//                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifmessage','3')";
-//                        $query = $this->adapter->query($sql);
-//                        $query->execute();
-//                        
+                        $txtlog=$event['type'];
+                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$txtlog','1')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
                         
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         // Get userId
