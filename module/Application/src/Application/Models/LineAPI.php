@@ -149,28 +149,28 @@ class LineAPI
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
-                          $messages = [
+                        /* v1
+                        $messages = [
                             'type' => 'text',
                             'text' => $event['message']['text']
                             ];
-                        //$messages[] = getDetailFromText($event['message']['text']);
                         $data = [
                             'replyToken' => $replyToken,
                             'messages' => [$messages],
                         ];
                         $post = json_encode($data);
-                        //$logtext = $replyToken.$post.$event['message']['text'];
+                        */
                         
 //                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$replyToken','4')";
 //                        $query = $this->adapter->query($sql);
 //                        $query->execute();
                         
-                        //$post = getDetailFromText($event['message']['text'],$replyToken);
+                        $post = getDetailFromText($event['message']['text'],$replyToken);
                         
-//                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$post','5')";
-//                        $query = $this->adapter->query($sql);
-//                        $query->execute();
-//                            
+                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$post','5')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
+                        
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
