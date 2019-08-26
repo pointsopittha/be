@@ -173,23 +173,26 @@ class LineAPI
                         $query = $this->adapter->query($sql);
                         $results = $query->execute();
                         $resultSet = new ResultSet;
-                        $data = $resultSet->initialize($results); 
-                        $data = $data->toArray();
+                        $dataa = $resultSet->initialize($results); 
+                        $dataa = $dataa->toArray();
                         //$messages;
-                        foreach($data as $key=>$value)
+                        error_log('dataa');
+                        foreach($dataa as $key=>$value)
                         {
                             $messages[] =  [
                                             'type' => 'text',
                                             'text' => $value['line_msg'].' '.$value['url']
                                         ];
                         }
+                        error_log('foreach');
                         $data = [
                                         'replyToken' => $replyToken,
                                         'messages' => $messages,
                                         ];
+                        error_log('data');
                         
                         $post = json_encode($data);
-                        
+                        //error_log('data');
                         error_log('implode_post='.implode(" ",$post));
                         
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
