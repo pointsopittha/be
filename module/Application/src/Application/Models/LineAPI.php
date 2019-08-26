@@ -78,26 +78,37 @@ class LineAPI
 ################################################################################ 
     function getDetailFromText($imsg='',$replyToken='')
     { 
-        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$imsg."';";
-        $query = $this->adapter->query($sql);
-        $results = $query->execute();
-        $resultSet = new ResultSet;
-        $data = $resultSet->initialize($results); 
-        $data = $data->toArray();
-        //$messages;
-        foreach($data as $key=>$value)
+        try
         {
-            $messages[] =  [
-                            'type' => 'text',
-                            'text' => $value['line_msg'].' '.$value['url']
-                        ];
+            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$imsg."';";
+            $query = $this->adapter->query($sql);
+            $results = $query->execute();
+            $resultSet = new ResultSet;
+            $data = $resultSet->initialize($results); 
+            $data = $data->toArray();
+            //$messages;
+            foreach($data as $key=>$value)
+            {
+                $messages[] =  [
+                                'type' => 'text',
+                                'text' => $value['line_msg'].' '.$value['url']
+                            ];
+            }
+            $data = [
+                            'replyToken' => $replyToken,
+                            'messages' => $messages,
+                            ];
+            $post = json_encode($data);
+            
+            error_log('implode_post='.implode(" ",$post));
+            
+            return $post;
         }
-        $data = [
-                        'replyToken' => $replyToken,
-                        'messages' => [$messages],
-                        ];
-        $post = json_encode($data);
-        return $post;
+        catch( Exception $e )
+        {
+            error_log('getDetailFromText='.$e);
+        }
+       
     }
 ################################################################################
     function edit($name) 
@@ -153,11 +164,12 @@ class LineAPI
                         ];
                         $post = json_encode($data);
                         */
-                        error_log('replytoken'.$replyToken);
-                        
+                        error_log('replytoken='.$replyToken);
+                        error_log('text='.$event['message']['text']);
+                        //error_log('post'.$post);
                         $post = getDetailFromText($event['message']['text'],$replyToken);
                         
-                        error_log('post'.$post);
+                        error_log('afterpost'.$post);
                         
                         
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
