@@ -78,7 +78,7 @@ class LineAPI
 ################################################################################ 
     function getDetailFromText($imsg='',$replyToken='')
     { 
-        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$imsg."'";
+        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$imsg."';";
         $query = $this->adapter->query($sql);
         $results = $query->execute();
         $resultSet = new ResultSet;
@@ -118,6 +118,7 @@ class LineAPI
             $content = file_get_contents('php://input');
             // Parse JSON
             $events = json_decode($content, true);
+            $post='';
             // Validate parsed JSON data
             if (!is_null($events['events'])) 
             {
@@ -144,6 +145,14 @@ class LineAPI
                         ];*/
                         //$post = json_encode($data);
                         $post = getDetailFromText($event['message']['text'],$replyToken);
+                        
+                        //log
+                        //$id = $this->getNextId();
+                        $logtext = $replyToken.$post.$event['message']['text'];
+                        $sql = $this->adapter->query("INSERT INTO log_action (logdesc,logaction) VALUES ('".$logtext."','getDetailFromText');");
+                        $resultsexecute = $query->execute();
+                            
+                        //return();
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -158,7 +167,7 @@ class LineAPI
                     }
                 }
             }
-            return "OK4";
+            return "OK6";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
