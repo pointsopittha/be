@@ -163,7 +163,7 @@ class LineAPI
                     }
                 }
             }
-            return "OK";
+            return "OK2";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
