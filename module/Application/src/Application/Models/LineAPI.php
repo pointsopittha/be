@@ -83,7 +83,7 @@ class LineAPI
 ################################################################################ 
     function getDetailFromText($imsg='')
     { 
-        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = 'news'";
+        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$imsg."'";
         $query = $this->adapter->query($sql);
         $results = $query->execute();
         $resultSet = new ResultSet;
