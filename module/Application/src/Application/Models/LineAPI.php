@@ -169,7 +169,7 @@ class LineAPI
                     }
                 }
             }
-            return "OK6";
+            return "OK7";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
