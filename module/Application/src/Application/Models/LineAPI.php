@@ -62,7 +62,7 @@ class LineAPI
     function getList()
     {
         $data = [];
-        $sql = "SELECT line_msgid,line_msg,url,imageurl,createby,createdate,updateby,lastupdate FROM vw_line_listmsg WHERE 1 ORDER BY lastupdate DESC LIMIT 1";
+        $sql = "SELECT line_msgid,line_msg,url,imageurl,createby,createdate,updateby,lastupdate FROM vw_line_listmsg";
         //$sql = "call usp_get_line_listmsg();"
         $query = $this->adapter->query($sql);
         $results = $query->execute();
@@ -106,14 +106,14 @@ class LineAPI
                 // Loop through each event
                 foreach ($events['events'] as $event) 
                 {
-                // Reply only when message sent is in 'text' format
+                    // Reply only when message sent is in 'text' format
                     if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
                     {
-                        // Get text sent
+                        // Get userId
                         $text = $event['source']['userId'];
                         // Get replyToken
                         $replyToken = $event['replyToken'];
-                        // Build message to reply back
+                        // prepare message to reply back
                         $messages = [
                         'type' => 'text',
                         'text' => $itext
