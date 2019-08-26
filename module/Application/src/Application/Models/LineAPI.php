@@ -185,6 +185,12 @@ class LineAPI
                     }
                 }
             }
+            else
+            {
+                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('event null','0')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
+            }
             return "OK8";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
