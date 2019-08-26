@@ -80,6 +80,30 @@ class LineAPI
         $row = $results->current();
         return $row;
     }
+################################################################################ 
+    function getDetailFromText($imsg='')
+    { 
+        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = 'promotion'";
+        $query = $this->adapter->query($sql);
+        $results = $query->execute();
+        $resultSet = new ResultSet;
+        $data = $resultSet->initialize($results); 
+        $data = $data->toArray();
+        $messages = array();
+        foreach($data as $key=>$value)
+        {
+            $messages[] =  [
+                            'type' => 'text',
+                            'text' => $value['line_msg'].'\r\n'.$value['url']
+                        ];
+        }
+       /* $data = [
+                        'replyToken' => $replyToken,
+                        'messages' => [$messages],
+                        ];
+        $post = json_encode($data);*/
+        return $messages;
+    }
 ################################################################################
     function edit($name) 
     { 
@@ -88,7 +112,7 @@ class LineAPI
         return($sql->execute());
     }
 ################################################################################    
-    function callbackUser($itext)
+    function callbackUser()
     {
         try
         { 
@@ -114,10 +138,11 @@ class LineAPI
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
-                        $messages = [
-                        'type' => 'text',
-                        'text' => $itext
-                        ];
+                          /*  $messages = [
+                            'type' => 'text',
+                            'text' => $itext
+                            ];*/
+                        $messages = getDetailFromText($event['message']['text']);
                         // Make a POST Request to Messaging API to reply to sender
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         $data = [
