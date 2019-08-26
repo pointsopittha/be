@@ -89,7 +89,7 @@ class LineAPI
         $resultSet = new ResultSet;
         $data = $resultSet->initialize($results); 
         $data = $data->toArray();
-        $messages = array();
+        //$messages;
         foreach($data as $key=>$value)
         {
             $messages[] =  [
@@ -98,8 +98,8 @@ class LineAPI
                         ];
         }
        /* $data = [
-                        'replyToken' => $replyToken,
-                        'messages' => [$messages],
+                        'replyToken' => '$replyToken',
+                        'messages' => $messages,
                         ];
         $post = json_encode($data);*/
         return $messages;
@@ -147,7 +147,7 @@ class LineAPI
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         $data = [
                         'replyToken' => $replyToken,
-                        'messages' => [$messages],
+                        'messages' => $messages,
                         ];
                         $post = json_encode($data);
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
