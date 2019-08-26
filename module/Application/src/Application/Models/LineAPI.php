@@ -1,20 +1,15 @@
 <?php
 namespace Application\Models;
-
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
-
 use Zend\Cache\StorageFactory;
 use Zend\Cache\Storage\Adapter\Memcached;
 use Zend\Cache\Storage\StorageInterface;
-
 use Zend\Json\Json; 
-
 use Zend\Http\Client; 
 use Zend\Http\Request;
-
 class LineAPI
 { 
     protected $lineapi; 
@@ -81,7 +76,7 @@ class LineAPI
         return $row;
     }
 ################################################################################ 
-    function getDetailFromText($imsg='')
+    function getDetailFromText($imsg='',$replyToken='')
     { 
         $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$imsg."'";
         $query = $this->adapter->query($sql);
@@ -97,12 +92,12 @@ class LineAPI
                             'text' => $value['line_msg'].' '.$value['url']
                         ];
         }
-       /* $data = [
-                        'replyToken' => '$replyToken',
+        $data = [
+                        'replyToken' => $replyToken,
                         'messages' => $messages,
                         ];
-        $post = json_encode($data);*/
-        return $messages;
+        $post = json_encode($data);
+        return $post;
     }
 ################################################################################
     function edit($name) 
@@ -132,23 +127,23 @@ class LineAPI
                     // Reply only when message sent is in 'text' format
                     if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
                     {
+                        $url = 'https://api.line.me/v2/bot/message/reply';
                         // Get userId
                         //$text = $event['source']['userId'];
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
-                            $messages = [
+                        /*  $messages = [
                             'type' => 'text',
                             'text' => $event['message']['text']
                             ];
                         //$messages[] = getDetailFromText($event['message']['text']);
-                        // Make a POST Request to Messaging API to reply to sender
-                        $url = 'https://api.line.me/v2/bot/message/reply';
                         $data = [
-                        'replyToken' => $replyToken,
-                        'messages' => [$messages],
-                        ];
-                        $post = json_encode($data);
+                            'replyToken' => $replyToken,
+                            'messages' => [$messages],
+                        ];*/
+                        //$post = json_encode($data);
+                        $post = getDetailFromText($event['message']['text'],$replyToken);
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -163,7 +158,7 @@ class LineAPI
                     }
                 }
             }
-            return "OK3";
+            return "OK4";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
@@ -228,4 +223,3 @@ class LineAPI
         }
     }
 }
-    

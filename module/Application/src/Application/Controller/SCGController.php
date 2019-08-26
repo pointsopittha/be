@@ -1,20 +1,15 @@
 <?php
 namespace Application\Controller;
-
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
-
 use Zend\Mvc\ModuleRouteListener;
-
 use Application\Models\Users;
 use Application\Models\Finding;
 use Application\Models\LineAPI;
-
 use Zend\Json\Json;
 use Zend\View\Model\JsonModel;
-
 use Zend\Cache\StorageFactory;
 use Zend\Cache\Storage\Adapter\Memcached;
 use Zend\Cache\Storage\StorageInterface;
@@ -147,7 +142,7 @@ class SCGController extends AbstractActionController
             $models = new LineAPI($this->adapter, $view->id, $view->page);
             
             $view->lineResult = $models->callbackUser();
-            //$view->lineResult = $models->getDetailFromText('news');
+            //$view->lineResult = $models->getDetailFromText('promotion','test');
             // = replyMsg('U4dcee7cf9fb7bb2f9eb2f32603d5bc64','hi');
                 //$this->redirect()->toRoute('index', ['action'=>'line']);
            
