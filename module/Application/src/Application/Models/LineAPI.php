@@ -94,7 +94,7 @@ class LineAPI
         }
         $data = [
                         'replyToken' => $replyToken,
-                        'messages' => $messages,
+                        'messages' => [$messages],
                         ];
         $post = json_encode($data);
         return $post;
@@ -120,9 +120,9 @@ class LineAPI
             $events = json_decode($content, true);
             $post='';
             
-//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$events','1')";
-//            $query = $this->adapter->query($sql);
-//            $query->execute();
+            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$events','1')";
+            $query = $this->adapter->query($sql);
+            $query->execute();
             
             // Validate parsed JSON data
             if (!is_null($events['events'])) 
@@ -198,10 +198,9 @@ class LineAPI
         catch( Exception $e )
         {
             print_r($e);
-            error_log($e, 1,"point.sopittha@gmail.com");
-//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
-//                        $query = $this->adapter->query($sql);
-//                        $query->execute();
+            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
         }
     }
 ################################################################################    
