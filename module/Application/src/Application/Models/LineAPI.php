@@ -119,15 +119,30 @@ class LineAPI
             // Parse JSON
             $events = json_decode($content, true);
             $post='';
+            
+            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('callbackUser','1')";
+            $query = $this->adapter->query($sql);
+            $query->execute();
+            
             // Validate parsed JSON data
             if (!is_null($events['events'])) 
             {
+                
+                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifevents','2')";
+                $query = $this->adapter->query($sql);
+                $query->execute();
+                
                 // Loop through each event
                 foreach ($events['events'] as $event) 
                 {
                     // Reply only when message sent is in 'text' format
                     if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
                     {
+                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifmessage','3')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
+                        
+                        
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         // Get userId
                         //$text = $event['source']['userId'];
@@ -144,17 +159,18 @@ class LineAPI
                             'messages' => [$messages],
                         ];*/
                         //$post = json_encode($data);
-                        $logtext = $replyToken.$post.$event['message']['text'];
-                        $sql = $this->adapter->query("INSERT INTO log_action (logdesc,logaction) VALUES ('".$logtext."','getDetailFromText');");
-                        $resultsexecute = $query->execute();
+                        //$logtext = $replyToken.$post.$event['message']['text'];
+                        
+                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$replyToken','4')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
                         
                         $post = getDetailFromText($event['message']['text'],$replyToken);
                         
-                        //log
-                        //$id = $this->getNextId();
-                        
+                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$replyToken','5')";
+                        $query = $this->adapter->query($sql);
+                        $query->execute();
                             
-                        //return();
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
