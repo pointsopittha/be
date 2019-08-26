@@ -119,7 +119,7 @@ class LineAPI
             // Parse JSON
             $events = json_decode($content, true);
             $post='';
-             print_r('if');
+            error_log('if');
             // Validate parsed JSON data
             if (!is_null($events['events'])) 
             {
@@ -127,7 +127,7 @@ class LineAPI
 //                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifevents','2')";
 //                $query = $this->adapter->query($sql);
 //                $query->execute();
-                print_r('!is_null');
+                error_log('!is_null');
                         
                 // Loop through each event
                 foreach ($events['events'] as $event) 
@@ -135,8 +135,7 @@ class LineAPI
                     // Reply only when message sent is in 'text' format
                     if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
                     {
-                        print_r($event['type']);
-                        
+                        error_log($event['type']);
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         // Get userId
                         //$text = $event['source']['userId'];
@@ -154,16 +153,12 @@ class LineAPI
                         ];
                         $post = json_encode($data);
                         */
+                        error_log('replytoken'.$replyToken);
                         
-//                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$replyToken','4')";
-//                        $query = $this->adapter->query($sql);
-//                        $query->execute();
-                       
                         $post = getDetailFromText($event['message']['text'],$replyToken);
-                        print_r($replyToken);
-                        $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$post','5')";
-                        $query = $this->adapter->query($sql);
-                        $query->execute();
+                        
+                        error_log('post'.$post);
+                        
                         
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
@@ -181,10 +176,7 @@ class LineAPI
             }
             else
             {
-//                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('event null','0')";
-//                $query = $this->adapter->query($sql);
-//                $query->execute();
-                 print_r('event null');
+                 error_log('event null');
             }
             return "OK10";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
@@ -193,6 +185,7 @@ class LineAPI
         catch( Exception $e )
         {
             print_r($e);
+            error_log($e);
 //            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
 //                        $query = $this->adapter->query($sql);
 //                        $query->execute();
