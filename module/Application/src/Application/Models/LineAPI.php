@@ -191,7 +191,7 @@ class LineAPI
                         $query = $this->adapter->query($sql);
                         $query->execute();
             }
-            return "OK8";
+            return "OK9";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
