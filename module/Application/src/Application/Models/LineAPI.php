@@ -137,12 +137,11 @@ class LineAPI
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
-                          /*  $messages = [
+                            $messages = [
                             'type' => 'text',
                             'text' => $event['message']['text']
-                            ];*/
-                        $text = $event['message']['text'];
-                        $messages[] = getDetailFromText($text);
+                            ];
+                        //$messages[] = getDetailFromText($event['message']['text']);
                         // Make a POST Request to Messaging API to reply to sender
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         $data = [
@@ -164,7 +163,7 @@ class LineAPI
                     }
                 }
             }
-            return "OK2";
+            return "OK3";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
