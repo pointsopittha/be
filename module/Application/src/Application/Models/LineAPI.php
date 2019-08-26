@@ -116,7 +116,6 @@ class LineAPI
     {
         try
         { 
-
             require "vendor/autoload.php";
             require_once('vendor/linecorp/line-bot-sdk/line-bot-sdk-tiny/LINEBotTiny.php');
             
@@ -138,11 +137,11 @@ class LineAPI
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
-                          /*  $messages = [
+                            $messages = [
                             'type' => 'text',
-                            'text' => $itext
-                            ];*/
-                        $messages = getDetailFromText($event['message']['text']);
+                            'text' => $event['message']['text']
+                            ];
+                        //$messages = getDetailFromText($event['message']['text']);
                         // Make a POST Request to Messaging API to reply to sender
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         $data = [
