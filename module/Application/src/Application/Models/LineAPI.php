@@ -90,9 +90,7 @@ class LineAPI
         try
         {
             //this function should use a store procedure or a view but my free hosting doesn't support the feature.
-            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg 
-                    JOIN line_msg_content ON line_msg_content.line_msg_contentid = line_msg.line_msg_contentid 
-                    WHERE line_msg_content = '".$imsg."';";
+            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = ".$imsg.";";
             $query = $this->adapter->query($sql);
             $results = $query->execute();
             $resultSet = new ResultSet;
@@ -157,8 +155,10 @@ class LineAPI
                         //$text = $event['source']['userId'];
                         // Get replyToken
                         $replyToken = $event['replyToken'];
+                        error_log('replyToken='.$event['replyToken']);
                         // prepare message to reply back
                         $text = $event['message']['text'];
+                        error_log('test='.$text);
                         $post = getDetailFromText($text,$replyToken);
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
@@ -178,7 +178,7 @@ class LineAPI
             {
                  error_log('event null');
             }
-            return "OK";
+            return "OK1";
         }
         catch( Exception $e )
         {
