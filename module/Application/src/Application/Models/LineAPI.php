@@ -56,15 +56,23 @@ class LineAPI
 ################################################################################ 
     function getList()
     {
-        $data = [];
-        $sql = "SELECT line_msgid,line_msg,url,imageurl,createby,createdate,updateby,lastupdate FROM vw_line_listmsg";
-        //$sql = "call usp_get_line_listmsg();"
-        $query = $this->adapter->query($sql);
-        $results = $query->execute();
-        $resultSet = new ResultSet;
-        $data = $resultSet->initialize($results); 
-        $data = $data->toArray();
-        return $data;
+        try
+        {
+                $data = [];
+                $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg";
+                //$sql = "call usp_get_line_listmsg();"
+                $query = $this->adapter->query($sql);
+                $results = $query->execute();
+                $resultSet = new ResultSet;
+                $data = $resultSet->initialize($results); 
+                $data = $data->toArray();
+                return $data;
+        }
+        catch( Exception $e )
+        {
+            error_log('Exception='.$e);
+        }
+      
     }
 ################################################################################ 
     function getDetail($id=0)
@@ -80,7 +88,7 @@ class LineAPI
     { 
         try
         {
-            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$imsg."';";
+            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = ".$imsg.";";
             $query = $this->adapter->query($sql);
             $results = $query->execute();
             $resultSet = new ResultSet;
@@ -169,7 +177,7 @@ class LineAPI
                         $text = $event['message']['text'];
                         //error_log('post'.$post);
                         //$post = getDetailFromText($event['message']['text'],$replyToken);
-                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM vw_line_listmsg WHERE line_msg_content = '".$text."';";
+                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = 1;";
                         $query = $this->adapter->query($sql);
                         $results = $query->execute();
                         $resultSet = new ResultSet;
@@ -213,13 +221,13 @@ class LineAPI
             {
                  error_log('event null');
             }
-            return "OK10";
+            return "OK1";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
         catch( Exception $e )
         {
-            print_r($e);
+            //print_r($e);
             error_log($e);
 //            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
 //                        $query = $this->adapter->query($sql);

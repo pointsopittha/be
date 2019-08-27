@@ -8,16 +8,16 @@ include_once('header.phtml');
     <div class="panel panel-default">
             <div class="panel-heading">Msg</div>
             <!-- Table -->
-            <table class="table">
+            <table class="table" style="width:100%;">
                 <tr>
                     <td>#</td>
                     <td>Msg</td>
                     <td>URL</td>
                     <td>image url</td>
-                    <td>Create by</td>
+                  <!--   <td>Create by</td>
                     <td>createdate</td>
                     <td>Update By</td>
-                    <td>Last update</td>
+                    <td>Last update</td>-->
                     <td></td>
                     <td></td>
                 </tr>
@@ -27,10 +27,10 @@ include_once('header.phtml');
                         <td><?=$value['line_msg'];?></td>
                         <td><a href="<?=$value['url'];?>" target="_blank">preview</a></td>
                         <td><img src="<?=$value['imageurl'];?>" style="max-width:100px;" /></td>
-                        <td><?=$value['createby'];?></td>
+                       <!-- <td><?=$value['createby'];?></td>
                         <td><?=$value['createdate'];?></td>
                         <td><?=$value['updateby'];?></td>
-                        <td><?=$value['lastupdate'];?></td>
+                        <td><?=$value['lastupdate'];?></td> -->
                         <td>
                             <a class="btn fas fa-edit" href="<?php echo $this->url('scghome').$this->lang; ?>/line/<?=$value['line_msgid'];?>/?act=detail" title="edit"></a>
                         </td>
