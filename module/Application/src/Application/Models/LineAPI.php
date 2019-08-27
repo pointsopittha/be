@@ -177,7 +177,7 @@ class LineAPI
                         $text = $event['message']['text'];
                         //error_log('post'.$post);
                         //$post = getDetailFromText($event['message']['text'],$replyToken);
-                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = 1;";
+                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = '$text';";
                         $query = $this->adapter->query($sql);
                         $results = $query->execute();
                         $resultSet = new ResultSet;
