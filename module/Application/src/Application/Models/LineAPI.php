@@ -88,16 +88,14 @@ class LineAPI
     { 
         try
         {
-            //this function should use a store procedure or a view but my free hosting doesn't support the feature.
-            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg 
-                    JOIN line_msg_content ON line_msg_content.line_msg_contentid = line_msg.line_msg_contentid 
-                    WHERE line_msg_content = '".$imsg."';";
+            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = ".$imsg.";";
             $query = $this->adapter->query($sql);
             $results = $query->execute();
             $resultSet = new ResultSet;
-            $querydata = $resultSet->initialize($results); 
-            $querydata = $querydata->toArray();
-            foreach($querydata as $key=>$value)
+            $data = $resultSet->initialize($results); 
+            $data = $data->toArray();
+            //$messages;
+            foreach($data as $key=>$value)
             {
                 $messages[] =  [
                                 'type' => 'text',
@@ -109,6 +107,9 @@ class LineAPI
                             'messages' => $messages,
                             ];
             $post = json_encode($data);
+            
+            error_log('implode_post='.implode(" ",$post));
+            
             return $post;
         }
         catch( Exception $e )
@@ -153,42 +154,55 @@ class LineAPI
                     // Reply only when message sent is in 'text' format
                     if ($event['type'] == 'message' && $event['message']['type'] == 'text') 
                     {
-//                        error_log($event['type']);
+                        error_log($event['type']);
                         $url = 'https://api.line.me/v2/bot/message/reply';
                         // Get userId
                         //$text = $event['source']['userId'];
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
+                        /* v1
+                        $messages = [
+                            'type' => 'text',
+                            'text' => $event['message']['text']
+                            ];
+                        $data = [
+                            'replyToken' => $replyToken,
+                            'messages' => [$messages],
+                        ];
+                        $post = json_encode($data);
+                        */
+                        error_log('replytoken='.$replyToken);
+                        error_log('text='.$event['message']['text']);
                         $text = $event['message']['text'];
                         //error_log('post'.$post);
                         //$post = getDetailFromText($event['message']['text'],$replyToken);
-//                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = 1;";
-//                        $query = $this->adapter->query($sql);
-//                        $results = $query->execute();
-//                        $resultSet = new ResultSet;
-//                        $dataa = $resultSet->initialize($results); 
-//                        $dataa = $dataa->toArray();
-//                        //$messages;
-//                        error_log('dataa');
-//                        foreach($dataa as $key=>$value)
-//                        {
-//                            $messages[] =  [
-//                                            'type' => 'text',
-//                                            'text' => $value['line_msg'].' '.$value['url']
-//                                        ];
-//                        }
-//                        error_log('foreach');
-//                        $data = [
-//                                        'replyToken' => $replyToken,
-//                                        'messages' => $messages,
-//                                        ];
-//                        error_log('data');
-//                        
-//                        $post = json_encode($data);
-//                        //error_log('data');
-//                        error_log('implode_post='.implode(" ",$post));
-                        $post = getDetailFromText($text,$replyToken);
+                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = 1;";
+                        $query = $this->adapter->query($sql);
+                        $results = $query->execute();
+                        $resultSet = new ResultSet;
+                        $dataa = $resultSet->initialize($results); 
+                        $dataa = $dataa->toArray();
+                        //$messages;
+                        error_log('dataa');
+                        foreach($dataa as $key=>$value)
+                        {
+                            $messages[] =  [
+                                            'type' => 'text',
+                                            'text' => $value['line_msg'].' '.$value['url']
+                                        ];
+                        }
+                        error_log('foreach');
+                        $data = [
+                                        'replyToken' => $replyToken,
+                                        'messages' => $messages,
+                                        ];
+                        error_log('data');
+                        
+                        $post = json_encode($data);
+                        //error_log('data');
+                        error_log('implode_post='.implode(" ",$post));
+                        
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -207,7 +221,7 @@ class LineAPI
             {
                  error_log('event null');
             }
-            return "OK1";
+            return "OK10";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
