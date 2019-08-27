@@ -23,6 +23,8 @@ class LineAPI
         $this->pageStart = ($this->perpage*($this->page-1));
         $this->now = date('Y-m-d H:i');
         $this->ip = '';
+        $this->host  = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s://" : "://") . $_SERVER['HTTP_HOST'];
+        
         $this->access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
         if (getenv('HTTP_CLIENT_IP'))
         {
@@ -161,23 +163,13 @@ class LineAPI
                         // Get replyToken
                         $replyToken = $event['replyToken'];
                         // prepare message to reply back
-                        /* v1
-                        $messages = [
-                            'type' => 'text',
-                            'text' => $event['message']['text']
-                            ];
-                        $data = [
-                            'replyToken' => $replyToken,
-                            'messages' => [$messages],
-                        ];
-                        $post = json_encode($data);
-                        */
                         error_log('replytoken='.$replyToken);
                         error_log('text='.$event['message']['text']);
                         $text = $event['message']['text'];
                         //error_log('post'.$post);
                         //$post = getDetailFromText($event['message']['text'],$replyToken);
-                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = '$text';";
+                        $sql = "SELECT line_msgid,line_msg,
+                        ,imageurl FROM line_msg WHERE line_msg_contentid = '$text';";
                         $query = $this->adapter->query($sql);
                         $results = $query->execute();
                         $resultSet = new ResultSet;
@@ -187,9 +179,11 @@ class LineAPI
                         error_log('dataa');
                         foreach($dataa as $key=>$value)
                         {
+                            $preURL = $this->host."/be/public/scg/th/click/".$value['line_msgid']."/";
+                            error_log('preURL'.$preURL);
                             $messages[] =  [
                                             'type' => 'text',
-                                            'text' => $value['line_msg'].' '.$value['url']
+                                            'text' => $value['line_msg'].' '.$preURL
                                         ];
                         }
                         error_log('foreach');
@@ -201,7 +195,7 @@ class LineAPI
                         
                         $post = json_encode($data);
                         //error_log('data');
-                        error_log('implode_post='.implode(" ",$post));
+                        
                         
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
@@ -221,7 +215,7 @@ class LineAPI
             {
                  error_log('event null');
             }
-            return "OK10";
+            return "OK11";
             //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
             //return ($oText);
         }
@@ -234,31 +228,12 @@ class LineAPI
 //                        $query->execute();
         }
     }
-################################################################################    
-    function replyMsg($idPush='',$replymsg='')
+################################################################################  
+    function clickURL($name)    
     {
-        try
-        { 
-/*
-            require "vendor/autoload.php";
-            //$access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
-            $channelSecret = 'bcc7ab382cd4718d958bf9ea9eb3580f';
-            $idPush = 'U4dcee7cf9fb7bb2f9eb2f32603d5bc64'
-            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->access_token);
-            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $channelSecret]);
-            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($replymsg);
-            $response = $bot->pushMessage($idPush, $textMessageBuilder);
-            
-            return $response->getHTTPStatus() . ' ' . $response->getRawBody();
-            */
-            //return "OK";
-            //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
-            //return ($oText);
-        }
-        catch( Exception $e )
-        {
-            print_r($e);
-        }
+        $id = $this->getNextId();
+        $sql = $this->adapter->query("INSERT INTO `users` (id, name, last_update) VALUES ('$id', '$name', '$this->now')");
+        return($sql->execute());
     }
 ################################################################################    
     function Apiservice($service='', $parameter = [], $type='post')
@@ -269,7 +244,6 @@ class LineAPI
            
             //$pre_para='{"to": "U4dcee7cf9fb7bb2f9eb2f32603d5bc64","messages":[{"type":"text","text":"Hello, world1"},{"type":"text","text":"Hello, world2"}]}';
             
-          
             //echo $url;
             $client = new Client($url, array(  
                 'adapter' => 'Zend\Http\Client\Adapter\Curl',

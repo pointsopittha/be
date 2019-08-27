@@ -110,7 +110,7 @@ return array(
             'application/scg/line' => __DIR__ . '/../view/scg/line.phtml',
             'application/scg/cv' => __DIR__ . '/../view/scg/cv.phtml',
             'application/scg/callback' => __DIR__ . '/../view/scg/callback.phtml',
-            //'application/scg/test' => __DIR__ . '/../view/scg/test.phtml',
+            'application/scg/click' => __DIR__ . '/../view/scg/click.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

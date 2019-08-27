@@ -33,6 +33,7 @@ class SCGController extends AbstractActionController
         $this->now = date("Y-m-d H:i:s");
         $this->config = include __DIR__ . '../../../../config/module.config.php';
         $this->adapter = new Adapter($this->config['Db']);
+         
     }
 ################################################################################
     public function basic()
@@ -43,10 +44,6 @@ class SCGController extends AbstractActionController
         $view->action = $this->params()->fromRoute('action', 'index');
         $view->id = $this->params()->fromRoute('id', '');
         $view->page = $this->params()->fromQuery('page', 1);
-        //$uri = $this->getRequest()->getUri();
-        //$view->baseUrl = $baseUrl;   
-        //$view->settext = $this->params()->fromRoute('settext', 'X, 5, 9, 15, 23, Y, Z');
-        
         return $view;
     } 
 ################################################################################
@@ -154,6 +151,31 @@ class SCGController extends AbstractActionController
             print_r($e);
         }
     }    
+################################################################################   
+    public function clickAction() 
+    {
+        try
+        {
+            $view = $this->basic();
+            $models = new LineAPI($this->adapter, $view->id, $view->page);
+            
+//           $view->clickResult = $models->clickURL();
+            $uri = $this->getRequest()->getUri();
+            $baseUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+            $FullLink = $baseUrl.$_SERVER['REQUEST_URI']; 
+            //$httpsURL = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            //$view->baseUrl = $baseUrl;   
+            //$view->clickResult = $FullLink;
+            //$this->url('scghome').$this->lang;
+           
+            $view->clickResult = $FullLink;
+            return $view;
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    } 
 ################################################################################
     public function scgAction() 
     {
