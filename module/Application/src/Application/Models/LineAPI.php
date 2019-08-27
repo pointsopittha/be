@@ -24,7 +24,6 @@ class LineAPI
         $this->now = date('Y-m-d H:i');
         $this->ip = '';
         $this->access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
-        $this->chanelSecret = 'bcc7ab382cd4718d958bf9ea9eb3580f';
         if (getenv('HTTP_CLIENT_IP'))
         {
             $this->ip = getenv('HTTP_CLIENT_IP');
@@ -90,7 +89,9 @@ class LineAPI
         try
         {
             //this function should use a store procedure or a view but my free hosting doesn't support the feature.
-            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = ".$imsg.";";
+            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg 
+                    JOIN line_msg_content ON line_msg_content.line_msg_contentid = line_msg.line_msg_contentid 
+                    WHERE line_msg_content = '".$imsg."';";
             $query = $this->adapter->query($sql);
             $results = $query->execute();
             $resultSet = new ResultSet;
@@ -119,7 +120,7 @@ class LineAPI
 ################################################################################
     function edit($name) 
     { 
-        $sql = "UPDATE line_msg SET name = '$name', last_update = '$this->now' WHERE id=".$this->id;  
+        $sql = "UPDATE `users` SET name = '$name', last_update = '$this->now' WHERE id=".$this->id;  
         $sql = $this->adapter->query($sql); 
         return($sql->execute());
     }
@@ -141,6 +142,9 @@ class LineAPI
             if (!is_null($events['events'])) 
             {
                 
+//                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifevents','2')";
+//                $query = $this->adapter->query($sql);
+//                $query->execute();
                 error_log('!is_null');
                         
                 // Loop through each event
@@ -155,10 +159,35 @@ class LineAPI
                         //$text = $event['source']['userId'];
                         // Get replyToken
                         $replyToken = $event['replyToken'];
-                        error_log('replyToken='.$event['replyToken']);
                         // prepare message to reply back
                         $text = $event['message']['text'];
-                        error_log('test='.$text);
+                        //error_log('post'.$post);
+                        //$post = getDetailFromText($event['message']['text'],$replyToken);
+//                        $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = 1;";
+//                        $query = $this->adapter->query($sql);
+//                        $results = $query->execute();
+//                        $resultSet = new ResultSet;
+//                        $dataa = $resultSet->initialize($results); 
+//                        $dataa = $dataa->toArray();
+//                        //$messages;
+//                        error_log('dataa');
+//                        foreach($dataa as $key=>$value)
+//                        {
+//                            $messages[] =  [
+//                                            'type' => 'text',
+//                                            'text' => $value['line_msg'].' '.$value['url']
+//                                        ];
+//                        }
+//                        error_log('foreach');
+//                        $data = [
+//                                        'replyToken' => $replyToken,
+//                                        'messages' => $messages,
+//                                        ];
+//                        error_log('data');
+//                        
+//                        $post = json_encode($data);
+//                        //error_log('data');
+//                        error_log('implode_post='.implode(" ",$post));
                         $post = getDetailFromText($text,$replyToken);
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
@@ -179,11 +208,42 @@ class LineAPI
                  error_log('event null');
             }
             return "OK1";
+            //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
+            //return ($oText);
         }
         catch( Exception $e )
         {
             //print_r($e);
             error_log($e);
+//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
+//                        $query = $this->adapter->query($sql);
+//                        $query->execute();
+        }
+    }
+################################################################################    
+    function replyMsg($idPush='',$replymsg='')
+    {
+        try
+        { 
+/*
+            require "vendor/autoload.php";
+            //$access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
+            $channelSecret = 'bcc7ab382cd4718d958bf9ea9eb3580f';
+            $idPush = 'U4dcee7cf9fb7bb2f9eb2f32603d5bc64'
+            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->access_token);
+            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $channelSecret]);
+            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($replymsg);
+            $response = $bot->pushMessage($idPush, $textMessageBuilder);
+            
+            return $response->getHTTPStatus() . ' ' . $response->getRawBody();
+            */
+            //return "OK";
+            //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
+            //return ($oText);
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
         }
     }
 ################################################################################    
@@ -191,7 +251,6 @@ class LineAPI
     {   
         try
         {
-            
             $url= 'https://api.line.me/v2/bot/message/push';
            
             //$pre_para='{"to": "U4dcee7cf9fb7bb2f9eb2f32603d5bc64","messages":[{"type":"text","text":"Hello, world1"},{"type":"text","text":"Hello, world2"}]}';
@@ -213,7 +272,7 @@ class LineAPI
         }
         catch( Exception $e )
         {
-            error_log($e);
+            print_r($e);
         }
     }
 }
