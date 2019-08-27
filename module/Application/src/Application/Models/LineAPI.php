@@ -178,7 +178,7 @@ class LineAPI
                         error_log('dataa');
                         foreach($dataa as $key=>$value)
                         {
-                            $preURL = $this->host."/be/public/scg/th/click/".$value['line_msgid']."/";
+                            $preURL = $this->host."/public/scg/th/click/".$value['line_msgid']."/";
                             error_log('preURL'.$preURL);
                             $messages[] =  [
                                             'type' => 'text',
@@ -194,7 +194,7 @@ class LineAPI
                         
                         $post = json_encode($data);
                         //error_log('data');
-                        
+                        error_log('post');
                         
                         $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $this->access_token);
                         $ch = curl_init($url);
