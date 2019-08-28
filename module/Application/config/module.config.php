@@ -112,6 +112,7 @@ return array(
             'application/scg/callback' => __DIR__ . '/../view/scg/callback.phtml',
             'application/scg/click' => __DIR__ . '/../view/scg/click.phtml',
             'application/scg/findtext' => __DIR__ . '/../view/scg/findtext.phtml',
+            'application/scg/place' => __DIR__ . '/../view/scg/place.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

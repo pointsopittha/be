@@ -1,18 +1,43 @@
- <div id="app">
-    <div class="wrapper">
-      <table style="width:100%; text-align: left;">
-        <tr>
-          <th style="text-align: left; width: 33%">name</th>
-          <th style="text-align: left; width: 33%">rating</th>
-        </tr>
-          <tr style="text-align: left;" v-for="post in postList">
-            <td style="text-align: left; width: 33%">{{ post.name }}</td>
-            <td style="text-align: left; width: 33%">{{ post.id }}</td>
-          </tr>
-        </table>
+ <div class="container">
+     
+      <table class="table">
+            <tr>
+                <th style="text-align: left; width: 33%">#</th>
+                <th style="text-align: left; width: 33%">name</th>
+                <th style="text-align: left; width: 33%">rating</th>
+                <th style="text-align: left; width: 33%">map</th>
+            </tr>
+            <?php foreach ($this->data as $key=>$value) { ?>
+                <tr>
+                    <td><?=$k+1;?></td>
+                    <td><?=$value['name'];?></td>
+                    <td><?=$value['rating'];?></td>
+                    <td><?=$value['address'];?></td>
+                    <td><?=$value['last_update'];?></td>
+                </tr>
+            <?php } ?>
+    </table>
+     
+     
+    <div id="app">
+        <div class="wrapper">
+          <table style="width:100%; text-align: left;">
+            <tr>
+                <th style="text-align: left; width: 33%">name</th>
+                <th style="text-align: left; width: 33%">rating</th>
+                <th style="text-align: left; width: 33%">address</th>
+            </tr>
+              <tr style="text-align: left;" v-for="post in postList">
+                <td style="text-align: left; width: 33%">{{ post.name }}</td>
+                <td style="text-align: left; width: 33%">{{ post.rating }}</td>
+                <td style="text-align: left; width: 33%">{{ post.address }}</td>
+              </tr>
+            </table>
+        </div>
     </div>
 </div>
-
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -23,9 +48,7 @@ var app = new Vue({
     axios.get('http://localhost/be/public/scg/th/find/')
         .then((response)=> {
           this.postList=response.data;
-        }).catch(error => {
-      console.log(error)
-    })
+        })
   }
 });
 </script>

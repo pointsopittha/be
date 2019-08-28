@@ -1,0 +1,90 @@
+<?php
+include_once('header.phtml');    
+?> 
+<div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12">
+            <div class="row pt-3 pb-3">
+                <div class="col-4 col-sm-4 col-md-4"> 
+                 Restaurant
+                </div>
+                <div class="col-8 col-sm-8 col-md-8 pl-0">
+                  Address
+                </div>
+            </div>
+            <hr/>
+            <?php
+            $foundPlace = $this->foundPlace;
+            if(!empty($foundPlace['results'][0])){ 
+                $count = count($foundPlace['results']);
+               foreach($foundPlace['results'] as $key=>$value){  
+            ?>
+            <div class="row pt-3 pb-3">
+                <div class="col-4 col-sm-4 col-md-4"> 
+                  <p class="title-column-right">  <?=$value->name;?></p>  
+                    <p class="title-column-right">rating :  <?=$value->rating;?></p>  
+                </div>
+                <div class="col-8 col-sm-8 col-md-8 pl-0">
+                    <p class="title-column-right">
+                         <?=$value->formatted_address;?>
+                    </p>  
+                    <p class="text-column-right"> 
+                    <?php if(!empty($value->opening_hours->open_now)){
+                        echo ($value->opening_hours->open_now == 1)?'Open Now !':'Closed';
+                    }
+                    else{
+                        echo '-';
+                    }
+                    ?></p>
+                </div>
+            </div>    
+            <?php
+               }
+                if(!empty($foundPlace['next_page_token']))
+                {
+                    //next page
+
+                }
+            }
+            ?>
+        </div>
+     </div>
+        
+        
+     
+    <div id="app">
+        <div class="wrapper">
+          <table style="width:100%; text-align: left;">
+            <tr>
+                <th style="text-align: left; width: 33%">name</th>
+                <th style="text-align: left; width: 33%">rating</th>
+                <th style="text-align: left; width: 33%">address</th>
+            </tr>
+              <tr style="text-align: left;" v-for="post in postList">
+                <td style="text-align: left; width: 33%">{{ post.name }}</td>
+                <td style="text-align: left; width: 33%">{{ post.rating }}</td>
+                <td style="text-align: left; width: 33%">{{ post.address }}</td>
+              </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    postList: []
+  },
+  mounted(){
+    axios.get('http://localhost/be/public/scg/th/find/')
+        .then((response)=> {
+          this.postList=response.data;
+        })
+  }
+});
+</script>
+<?php
+include_once('footer.phtml');    
+?>

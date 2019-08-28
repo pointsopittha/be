@@ -76,7 +76,6 @@ class LineAPI
         {
             error_log('Exception='.$e);
         }
-      
     }
 ################################################################################ 
     function getDetail()
@@ -87,10 +86,28 @@ class LineAPI
         $row = $results->current();
         return $row;
     }
+################################################################################  
+    function add($line_msg,$url,$createby)    
+    {
+        $sql = $this->adapter->query("INSERT INTO `line_msg` (line_msg, url,createby,createdate) VALUES ('$id', '$name', $createby,'$this->now')");
+        return($sql->execute());
+    }
+################################################################################  
+    function log($logdesc,$logaction)    
+    {
+        $sql = $this->adapter->query("INSERT INTO `log_action` (logdesc, logaction,logip,loguser) VALUES ('$logdesc', '$logaction','$this->ip', $createby)");
+        return($sql->execute());
+    }
+################################################################################  
+    function del()    
+    {
+        $sql = $this->adapter->query("DELETE FROM `line_msg` WHERE line_msgid=".$this->id);
+        return($sql->execute());
+    }
 ################################################################################
-    function edit($name) 
+    function edit($line_msg,$url) 
     { 
-        $sql = "UPDATE `users` SET name = '$name', last_update = '$this->now' WHERE id=".$this->id;  
+        $sql = "UPDATE `line_msg` SET line_msg = '$line_msg',url = '$url', lastupdate = '$this->now' WHERE line_msgid=".$this->id;  
         $sql = $this->adapter->query($sql); 
         return($sql->execute());
     }
@@ -111,10 +128,6 @@ class LineAPI
             // Validate parsed JSON data
             if (!is_null($events['events'])) 
             {
-                
-//                $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('ifevents','2')";
-//                $query = $this->adapter->query($sql);
-//                $query->execute();
                 error_log('!is_null');
                         
                 // Loop through each event
@@ -173,7 +186,6 @@ class LineAPI
                         $result = curl_exec($ch);
                         curl_close($ch);
                         return $result . "\r\n";
-                        //return $result;
                     }
                 }
             }
@@ -181,17 +193,11 @@ class LineAPI
             {
                  error_log('event null');
             }
-            return "OK11";
-            //return $response->getHTTPStatus() . ' ' . $response->getRawBody();  
-            //return ($oText);
+            return "OK";
         }
         catch( Exception $e )
         {
-            //print_r($e);
             error_log($e);
-//            $sql = "INSERT INTO log_action (logdesc,logaction) VALUES ('$e','Exception')";
-//                        $query = $this->adapter->query($sql);
-//                        $query->execute();
         }
     }
 ################################################################################  
@@ -215,8 +221,6 @@ class LineAPI
         {
             $url= 'https://api.line.me/v2/bot/message/push';
            
-            //$pre_para='{"to": "U4dcee7cf9fb7bb2f9eb2f32603d5bc64","messages":[{"type":"text","text":"Hello, world1"},{"type":"text","text":"Hello, world2"}]}';
-            
             //echo $url;
             $client = new Client($url, array(  
                 'adapter' => 'Zend\Http\Client\Adapter\Curl',

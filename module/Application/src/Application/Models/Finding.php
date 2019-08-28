@@ -121,26 +121,33 @@ class Finding
     {
         try
         { 
-            //Please use “Place search|Place API(by Google)” for finding all restaurants in Bangsue area and show result by JSON
             $response = $this->Apiservice($iText);    
-            //return $response;
-            
             $arrRes = (array)json_decode($response);
-            
             foreach($arrRes['results'] as $key=>$value)
             {
                 $messages[] =  [
                                 'id' => $value->id,
                                 'name' => $value->name,
                                 'rating' => $value->rating,
-                                'formatted_address' => $value->formatted_address
+                                'address' => $value->formatted_address
                             ];
             }
-
+            
             $response = json_encode($messages);
             return $response;  
-//            return (array)json_decode($response);  
-            //return ($oText);
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    }
+################################################################################    
+    function findPlaceArr($iText='')
+    {
+        try
+        { 
+            $response = $this->Apiservice($iText);    
+            return (array)json_decode($response);  
         }
         catch( Exception $e )
         {

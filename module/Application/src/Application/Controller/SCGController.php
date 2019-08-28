@@ -86,6 +86,22 @@ class SCGController extends AbstractActionController
         }
     }
 ################################################################################
+    public function placeAction() 
+    {
+        try
+        { 
+            $view = $this->basic();  
+            $models = new Finding($this->adapter, $view->id, $view->page);
+            
+            $view->foundPlace = $models->findPlaceArr('Place');
+            return $view; 
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    }
+################################################################################
     
     public function findAction() 
     {
@@ -117,28 +133,24 @@ class SCGController extends AbstractActionController
                 $view->data = $models->getList();
                 $view->detail = $models->getDetail($view->id);
             }
-            /*
-            else if($act == 'add')
-            {
-                $name = $this->params()->fromPost('name');
-                if($name) $models->add($name);
-                $this->redirect()->toRoute('index', ['action'=>'line']);
-            }
             else if($act == 'edit')
             {
-                $name = $this->params()->fromPost('name');
-                if($name) $models->edit($name);
-                $this->redirect()->toRoute('index', ['action'=>'line']);
+                $line_msg = $this->params()->fromPost('line_msg');
+                $url = $this->params()->fromPost('url');
+                $models->edit($line_msg,$url);
+                $this->redirect()->toRoute('scg', ['action'=>'line']);
+            }
+            else if($act == 'add')
+            {
+                $line_msg = $this->params()->fromPost('line_msg');
+                $url = $this->params()->fromPost('url');
+                $models->add($line_msg,$url,8);
+                $this->redirect()->toRoute('scg', ['action'=>'line']);
             }
             else if($act == 'del')
             {
                 $models->del();
-                $this->redirect()->toRoute('index', ['action'=>'line']);
-            }*/
-            else if($act == 'send')
-            {
-                $view->lineResult = $models->sendMsg();
-                $this->redirect()->toRoute('index', ['action'=>'line']);
+                $this->redirect()->toRoute('scg', ['action'=>'line']);
             }
             else
             {
