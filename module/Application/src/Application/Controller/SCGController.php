@@ -18,6 +18,7 @@ use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Storage\AvailableSpaceCapableInterface;
 use Zend\Cache\Storage\FlushableInterface;
 use Zend\Cache\Storage\TotalSpaceCapableInterface;
+
 /*
 $this->params()->fromPost('paramname');   // From POST
 $this->params()->fromQuery('paramname');  // From GET
@@ -34,6 +35,7 @@ class SCGController extends AbstractActionController
         $this->now = date("Y-m-d H:i:s");
         $this->config = include __DIR__ . '../../../../config/module.config.php';
         $this->adapter = new Adapter($this->config['Db']);
+        
          
     }
 ################################################################################
@@ -45,6 +47,10 @@ class SCGController extends AbstractActionController
         $view->action = $this->params()->fromRoute('action', 'index');
         $view->id = $this->params()->fromRoute('id', '');
         $view->page = $this->params()->fromQuery('page', 1);
+        
+        
+     
+        
         return $view;
     } 
 ################################################################################
@@ -143,8 +149,9 @@ class SCGController extends AbstractActionController
             else if($act == 'add')
             {
                 $line_msg = $this->params()->fromPost('line_msg');
+                $contentid = $this->params()->fromPost('contentid');
                 $url = $this->params()->fromPost('url');
-                $models->add($line_msg,$url,8);
+                $models->add($line_msg,$url,8,$contentid);
                 $this->redirect()->toRoute('scg', ['action'=>'line']);
             }
             else if($act == 'del')

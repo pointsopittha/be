@@ -87,9 +87,10 @@ class LineAPI
         return $row;
     }
 ################################################################################  
-    function add($line_msg,$url,$createby)    
+    function add($line_msg,$url,$createby,$contentid)    
     {
-        $sql = $this->adapter->query("INSERT INTO `line_msg` (line_msg, url,createby,createdate) VALUES ('$id', '$name', $createby,'$this->now')");
+        $sql = "INSERT INTO line_msg (line_msg, url,line_msg_contentid,createby) VALUES ('".$line_msg."', '".$url."',1, ".$createby.");";
+        $sql = $this->adapter->query($sql);
         return($sql->execute());
     }
 ################################################################################  
