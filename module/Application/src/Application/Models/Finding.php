@@ -64,14 +64,14 @@ class Finding
         { 
             ############### how to find them 1 #################################################################
         
-            if ( strstr( $iText, 'X' ) && strstr( $iText, 'Y' ) && strstr( $iText, 'Z' )  ) 
+            /*if ( strstr( $iText, 'X' ) && strstr( $iText, 'Y' ) && strstr( $iText, 'Z' )  ) 
             {
                 $oText = 'Found X Y Z';
             } 
             else 
             {
                 $oText = 'Text Not found';
-            }
+            }*/
          
             ############### how to find them 2 #################################################################
             /*
@@ -89,7 +89,26 @@ class Finding
             */
         
             ############### how to find them 3 #################################################################
-        
+            $oText = '';
+            if ( strstr( $iText, 'X' )) 
+            {
+                $oText .= 'Found X ';
+            } 
+            
+            if(strstr( $iText, 'Y' )) 
+            {
+                $oText .= 'Found Y ';
+            }
+            
+            if(strstr( $iText, 'Z' )) 
+            {
+                $oText .= 'Found Z ';
+            }
+            
+            if($oText == '') 
+            {
+                $oText = 'Text Not found';
+            }
             return ($oText);
         }
         catch( Exception $e )
@@ -105,7 +124,22 @@ class Finding
             //Please use “Place search|Place API(by Google)” for finding all restaurants in Bangsue area and show result by JSON
             $response = $this->Apiservice($iText);    
             //return $response;
-            return (array)json_decode($response);  
+            
+            $arrRes = (array)json_decode($response);
+            
+            foreach($arrRes['results'] as $key=>$value)
+            {
+                $messages[] =  [
+                                'id' => $value->id,
+                                'name' => $value->name,
+                                'rating' => $value->rating,
+                                'formatted_address' => $value->formatted_address
+                            ];
+            }
+
+            $response = json_encode($messages);
+            return $response;  
+//            return (array)json_decode($response);  
             //return ($oText);
         }
         catch( Exception $e )

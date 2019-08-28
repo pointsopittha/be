@@ -1,0 +1,31 @@
+ <div id="app">
+    <div class="wrapper">
+      <table style="width:100%; text-align: left;">
+        <tr>
+          <th style="text-align: left; width: 33%">name</th>
+          <th style="text-align: left; width: 33%">rating</th>
+        </tr>
+          <tr style="text-align: left;" v-for="post in postList">
+            <td style="text-align: left; width: 33%">{{ post.name }}</td>
+            <td style="text-align: left; width: 33%">{{ post.id }}</td>
+          </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    postList: []
+  },
+  mounted(){
+    axios.get('http://localhost/be/public/scg/th/find/')
+        .then((response)=> {
+          this.postList=response.data;
+        }).catch(error => {
+      console.log(error)
+    })
+  }
+});
+</script>

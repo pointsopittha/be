@@ -66,6 +66,9 @@
         <![endif]-->
     </head>
     <body>
+        
+<script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <?php echo $this->content; ?>
         
         <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -86,7 +89,8 @@
 
         <!-- Custom scripts for this template -->
         <script src="<?php echo $this->url('home'); ?>js/freelancer.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js" defer></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js" defer></script> -->
+        
         <script src="<?php echo $this->url('home'); ?>js/myJS.js" onLoad="init();" defer></script>
     </body>
 </html>

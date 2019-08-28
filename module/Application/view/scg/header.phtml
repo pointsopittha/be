@@ -8,20 +8,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item mx-0 mx-lg-1">
+            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="<?= $this->url('scg', ['action' => 'findtext']); ?>"><?=$this->translate('XYZ');?></a>
+          </li>
           <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="<?= $this->url('scg', ['action' => 'find']); ?>"><?=$this->translate('How to find them');?></a>
+            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="<?= $this->url('scg'); ?>"><?=$this->translate('Places');?></a>
           </li>
           <li class="nav-item mx-0 mx-lg-1">
             <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="<?= $this->url('scg', ['action' => 'line']); ?>">Line API</a>
           </li>
           <li class="nav-item mx-0 mx-lg-1">
             <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="<?= $this->url('scg', ['action' => 'cv']); ?>">CV</a>
-          </li>
-            <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="<?= $this->url('scg', ['action' => 'callback']); ?>">callback</a>
-          </li>
-             <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="<?= $this->url('scg', ['action' => 'click']); ?>">callback</a>
           </li>
         </ul>
       </div>

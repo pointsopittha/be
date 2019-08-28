@@ -62,18 +62,37 @@ class SCGController extends AbstractActionController
     }    
 ################################################################################
     
-    public function findAction() 
+    public function findtextAction() 
     {
         try
         { 
             $view = $this->basic();  
             $models = new Finding($this->adapter, $view->id, $view->page);
             
-            $iText = 'X, 5, 9, 15, 23, Y, Z';
+            //$iText = 'X, 5, 9, 15, 23, Y, Z';
             $oText='';
             
-            $view->settext = $iText;
+            //$view->settext = 'X, 5, 9, 15, 23, Y, Z';
+            $iText = $this->params()->fromPost('text');
             $view->foundtext = $models->findText($iText);
+            
+            //$view->foundPlace = $models->findPlace('Place');
+            $view->fx =  'find';   
+            return $view; 
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    }
+################################################################################
+    
+    public function findAction() 
+    {
+        try
+        { 
+            $view = $this->basic();  
+            $models = new Finding($this->adapter, $view->id, $view->page);
             
             $view->foundPlace = $models->findPlace('Place');
             $view->fx =  'find';   
@@ -84,6 +103,7 @@ class SCGController extends AbstractActionController
             print_r($e);
         }
     }
+    
 ################################################################################   
     public function lineAction() 
     {
