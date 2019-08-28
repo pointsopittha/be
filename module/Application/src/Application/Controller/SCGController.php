@@ -1,6 +1,7 @@
 <?php
 namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Controller\Plugin\Redirect;
 use Zend\View\Model\ViewModel;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
@@ -159,17 +160,12 @@ class SCGController extends AbstractActionController
             $view = $this->basic();
             $models = new LineAPI($this->adapter, $view->id, $view->page);
             
-//           $view->clickResult = $models->clickURL();
-            $uri = $this->getRequest()->getUri();
-            $baseUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
-            $FullLink = $baseUrl.$_SERVER['REQUEST_URI']; 
-            //$httpsURL = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-            //$view->baseUrl = $baseUrl;   
-            //$view->clickResult = $FullLink;
-            //$this->url('scghome').$this->lang;
-           
-            $view->clickResult = $FullLink;
-            return $view;
+            //$view->clickResult = $models->clickURL();
+//            $this->_redirect($models->clickURL());
+            //$this->_helper->redirector->gotoUrlAndExit($models->clickURL());
+            //$view->clickResult = $MAC;
+            $urltogo = $models->clickURL();
+            return $this->redirect()->toUrl($urltogo);
         }
         catch( Exception $e )
         {

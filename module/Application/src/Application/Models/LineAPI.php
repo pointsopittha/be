@@ -24,7 +24,6 @@ class LineAPI
         $this->now = date('Y-m-d H:i');
         $this->ip = '';
         $this->host  = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s://" : "://") . $_SERVER['HTTP_HOST'];
-        
         $this->access_token = 'cgd3YSfVz6ejOTYzfAKb1lj0Ul4ksYQ6xhjboPhaHFydiDDt9jp2zKYMVcaDs1WDrS/M2woFdcvbUbJigyTULvxzPtUb3hyVcIbHOeus+d4hT0k+wdS/k0brxQG7F1aDmAvyG5xJi5pG9R7DQXlB9gdB04t89/1O/w1cDnyilFU=';
         if (getenv('HTTP_CLIENT_IP'))
         {
@@ -54,6 +53,9 @@ class LineAPI
         {
             $this->ip = 'UNKNOWN';
         }
+        
+        $this->MAC = exec('getmac'); 
+        $this->MAC = strtok($this->MAC, ' '); 
     } 
 ################################################################################ 
     function getList()
@@ -77,48 +79,13 @@ class LineAPI
       
     }
 ################################################################################ 
-    function getDetail($id=0)
+    function getDetail()
     { 
-        $sql = "SELECT * FROM line_msg WHERE line_msgid=".$id." LIMIT 1";
+        $sql = "SELECT * FROM line_msg WHERE line_msgid=".$this->id." LIMIT 1";
         $statement = $this->adapter->query($sql);
         $results = $statement->execute();
         $row = $results->current();
         return $row;
-    }
-################################################################################ 
-    function getDetailFromText($imsg='',$replyToken='')
-    { 
-        try
-        {
-            $sql = "SELECT line_msgid,line_msg,url,imageurl FROM line_msg WHERE line_msg_contentid = ".$imsg.";";
-            $query = $this->adapter->query($sql);
-            $results = $query->execute();
-            $resultSet = new ResultSet;
-            $data = $resultSet->initialize($results); 
-            $data = $data->toArray();
-            //$messages;
-            foreach($data as $key=>$value)
-            {
-                $messages[] =  [
-                                'type' => 'text',
-                                'text' => $value['line_msg'].' '.$value['url']
-                            ];
-            }
-            $data = [
-                            'replyToken' => $replyToken,
-                            'messages' => $messages,
-                            ];
-            $post = json_encode($data);
-            
-            error_log('implode_post='.implode(" ",$post));
-            
-            return $post;
-        }
-        catch( Exception $e )
-        {
-            error_log('getDetailFromText='.$e);
-        }
-       
     }
 ################################################################################
     function edit($name) 
@@ -228,11 +195,18 @@ class LineAPI
         }
     }
 ################################################################################  
-    function clickURL($name)    
+    function clickURL()    
     {
-        $id = $this->getNextId();
-        $sql = $this->adapter->query("INSERT INTO `users` (id, name, last_update) VALUES ('$id', '$name', '$this->now')");
-        return($sql->execute());
+        $sql = $this->adapter->query("INSERT INTO MZtG5O9hWn.line_click_log (line_msgid,ip,mac_address) VALUES ($this->id,'$this->ip','$this->MAC');");
+        $sql->execute();
+        
+        $sql = "SELECT * FROM line_msg WHERE line_msgid=".$this->id." LIMIT 1";
+        $statement = $this->adapter->query($sql);
+        $results = $statement->execute();
+        $row = $results->current();
+        $redirectURL = $row['url'];
+        
+        return $redirectURL;
     }
 ################################################################################    
     function Apiservice($service='', $parameter = [], $type='post')
