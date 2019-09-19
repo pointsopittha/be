@@ -64,14 +64,14 @@ class Finding
         { 
             ############### how to find them 1 #################################################################
         
-            if ( strstr( $iText, 'X' ) && strstr( $iText, 'Y' ) && strstr( $iText, 'Z' )  ) 
+            /*if ( strstr( $iText, 'X' ) && strstr( $iText, 'Y' ) && strstr( $iText, 'Z' )  ) 
             {
                 $oText = 'Found X Y Z';
             } 
             else 
             {
                 $oText = 'Text Not found';
-            }
+            }*/
          
             ############### how to find them 2 #################################################################
             /*
@@ -89,7 +89,26 @@ class Finding
             */
         
             ############### how to find them 3 #################################################################
-        
+            $oText = '';
+            if ( strstr( $iText, 'X' )) 
+            {
+                $oText .= 'Found X ';
+            } 
+            
+            if(strstr( $iText, 'Y' )) 
+            {
+                $oText .= 'Found Y ';
+            }
+            
+            if(strstr( $iText, 'Z' )) 
+            {
+                $oText .= 'Found Z ';
+            }
+            
+            if($oText == '') 
+            {
+                $oText = 'Text Not found';
+            }
             return ($oText);
         }
         catch( Exception $e )
@@ -102,11 +121,33 @@ class Finding
     {
         try
         { 
-            //Please use “Place search|Place API(by Google)” for finding all restaurants in Bangsue area and show result by JSON
             $response = $this->Apiservice($iText);    
-            //return $response;
+            $arrRes = (array)json_decode($response);
+            foreach($arrRes['results'] as $key=>$value)
+            {
+                $messages[] =  [
+                                'id' => $value->id,
+                                'name' => $value->name,
+                                'rating' => $value->rating,
+                                'address' => $value->formatted_address
+                            ];
+            }
+            
+            $response = json_encode($messages);
+            return $response;  
+        }
+        catch( Exception $e )
+        {
+            print_r($e);
+        }
+    }
+################################################################################    
+    function findPlaceArr($iText='')
+    {
+        try
+        { 
+            $response = $this->Apiservice($iText);    
             return (array)json_decode($response);  
-            //return ($oText);
         }
         catch( Exception $e )
         {
@@ -118,7 +159,7 @@ class Finding
     {   
         try
         {
-            $url= 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyAP4ExPP9WsZav-lGimhJ71omKqiQU4Xb0&query=bangsue&region=th&type=restaurant';
+            $url= 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyD2u4Jl-xP6t6Bb6rgJIwVEpg33yLPMjfM&query=bangsue&region=th&type=restaurant';
           
             //echo $url;
             $client = new Client($url, array(  

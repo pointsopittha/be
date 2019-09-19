@@ -106,8 +106,13 @@ return array(
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
             #SCG
             'application/scg/index' => __DIR__ . '/../view/scg/index.phtml',
-            'application/scg/find' => __DIR__ . '/../view/scg/find.phtml',
+            //'application/scg/find' => __DIR__ . '/../view/scg/find.phtml',
             'application/scg/line' => __DIR__ . '/../view/scg/line.phtml',
+            'application/scg/cv' => __DIR__ . '/../view/scg/cv.phtml',
+            'application/scg/callback' => __DIR__ . '/../view/scg/callback.phtml',
+            'application/scg/click' => __DIR__ . '/../view/scg/click.phtml',
+            'application/scg/findtext' => __DIR__ . '/../view/scg/findtext.phtml',
+            'application/scg/place' => __DIR__ . '/../view/scg/place.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
@@ -135,12 +140,12 @@ return array(
     
     'Db' => array(
         'driver' => 'Pdo',
-        'dsn' => 'mysql:dbname=scg;host=localhost',   
+        'dsn' => 'mysql:dbname=MZtG5O9hWn;host=remotemysql.com:3306',   
         'driver_options' => array( 
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         ),
-        'username' => 'root',
-        'password' => 'P@ssw0rd', 
+        'username' => 'MZtG5O9hWn',
+        'password' => 'LPiUy1pUOc', 
     ),
     
     'service_manager' => array( 

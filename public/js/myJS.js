@@ -1,6 +1,0 @@
-function init()
-{
-    
-}
-
-function doNothing(){}

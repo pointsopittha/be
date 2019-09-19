@@ -2,8 +2,7 @@
 node_modules/
 .c9/
 .git/
-php_errors.log*
-composer.lock*
+php_errors.log
 
 # Editor directories and files
 .idea
