@@ -106,7 +106,7 @@ return array(
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
             #SCG
             'application/scg/index' => __DIR__ . '/../view/scg/index.phtml',
-            'application/scg/find' => __DIR__ . '/../view/scg/find.phtml',
+            //'application/scg/find' => __DIR__ . '/../view/scg/find.phtml',
             'application/scg/line' => __DIR__ . '/../view/scg/line.phtml',
             'application/scg/cv' => __DIR__ . '/../view/scg/cv.phtml',
             'application/scg/callback' => __DIR__ . '/../view/scg/callback.phtml',

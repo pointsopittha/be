@@ -10,6 +10,7 @@ use Zend\Mvc\ModuleRouteListener;
 use Application\Models\Users;
 use Application\Models\Finding;
 use Application\Models\LineAPI;
+
 use Zend\Json\Json;
 use Zend\View\Model\JsonModel;
 use Zend\Cache\StorageFactory;
@@ -18,7 +19,7 @@ use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Storage\AvailableSpaceCapableInterface;
 use Zend\Cache\Storage\FlushableInterface;
 use Zend\Cache\Storage\TotalSpaceCapableInterface;
-
+use Zend\Http\Headers;
 /*
 $this->params()->fromPost('paramname');   // From POST
 $this->params()->fromQuery('paramname');  // From GET
@@ -116,9 +117,13 @@ class SCGController extends AbstractActionController
             $view = $this->basic();  
             $models = new Finding($this->adapter, $view->id, $view->page);
             
-            $view->foundPlace = $models->findPlace('Place');
-            $view->fx =  'find';   
-            return $view; 
+           
+            $res = $models->findPlace('Place');
+            
+            $response = $this->getResponse();
+            $response->getHeaders()->addHeaderLine( 'Content-Type', 'application/json' );
+            $response->setContent($res);
+            return $response;
         }
         catch( Exception $e )
         {

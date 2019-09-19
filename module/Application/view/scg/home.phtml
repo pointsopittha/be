@@ -1,6 +1,32 @@
 
 <?php
 include_once('header.phtml');     
-include_once('cv.phtml');  
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div id="app">
+<input type="text" v-on:input="changeTitle">
+<p>
+{{ title }}
+</p>
+    <p>{{ sayHello() }} - <a v-bind:href="link">Google</a></p>
+</div>
+
+<script>
+new Vue({
+  el: "#app",
+  data: {
+    title: 'Hello',
+      link: 'http://google.com'
+  },
+  methods: {
+  	sayHello: function(event) {
+    	this.title = event.target.value;
+    }
+  }
+});
+</script>
+<?php
 include_once('footer.phtml');
 ?>

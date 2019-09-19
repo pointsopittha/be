@@ -1,11 +1,60 @@
 <?php
-include_once('header.phtml');    
-?> 
+include_once('header.phtml');
+?>
 <div class="container">
+
+<div id="app">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12">
+            <div class="row pt-3 pb-3">
+                <div class="col-4 col-sm-4 col-md-4">
+                 Restaurant
+                </div>
+                <div class="col-8 col-sm-8 col-md-8 pl-0">
+                  Address
+                </div>
+            </div>
+            <hr/>
+            <div class="row pt-3 pb-3" v-for="v in postList">
+                <div class="col-4 col-sm-4 col-md-4">
+                  <p class="title-column-right">  {{ v.name }}</p>
+                    <p class="title-column-right">rating :  {{ v.rating }}</p>
+                </div>
+                <div class="col-8 col-sm-8 col-md-8 pl-0">
+                    <p class="title-column-right">
+                         {{ v.address }}
+                    </p>
+                    <p class="text-column-right">
+                        {{ v.opening_hours }}
+                   </p>
+                </div>
+            </div>
+        </div>
+     </div>
+<!--
+      <div class="wrapper">
+        <table style="width:100%; text-align: left;">
+          <tr>
+              <th style="text-align: left; width: 33%">name</th>
+              <th style="text-align: left; width: 33%">address</th>
+              <th style="text-align: left; width: 33%">rating</th>
+          </tr>
+            <tr style="text-align: left;" v-for="v in postList">
+              <td style="text-align: left; width: 33%">{{ v.name }}</td>
+              <td style="text-align: left; width: 33%">{{ v.address }}</td>
+                <td style="text-align: left; width: 33%">{{ v.rating }}</td>
+            </tr>
+          </table>
+      </div>
+-->
+  </div>
+    
+    
+    
       <div class="row">
         <div class="col-12 col-sm-12 col-md-12">
             <div class="row pt-3 pb-3">
-                <div class="col-4 col-sm-4 col-md-4"> 
+                <div class="col-4 col-sm-4 col-md-4">
                  Restaurant
                 </div>
                 <div class="col-8 col-sm-8 col-md-8 pl-0">
@@ -15,20 +64,20 @@ include_once('header.phtml');
             <hr/>
             <?php
             $foundPlace = $this->foundPlace;
-            if(!empty($foundPlace['results'][0])){ 
+            if(!empty($foundPlace['results'][0])){
                 $count = count($foundPlace['results']);
-               foreach($foundPlace['results'] as $key=>$value){  
+               foreach($foundPlace['results'] as $key=>$value){
             ?>
             <div class="row pt-3 pb-3">
-                <div class="col-4 col-sm-4 col-md-4"> 
-                  <p class="title-column-right">  <?=$value->name;?></p>  
-                    <p class="title-column-right">rating :  <?=$value->rating;?></p>  
+                <div class="col-4 col-sm-4 col-md-4">
+                  <p class="title-column-right">  <?=$value->name;?></p>
+                    <p class="title-column-right">rating :  <?=$value->rating;?></p>
                 </div>
                 <div class="col-8 col-sm-8 col-md-8 pl-0">
                     <p class="title-column-right">
                          <?=$value->formatted_address;?>
-                    </p>  
-                    <p class="text-column-right"> 
+                    </p>
+                    <p class="text-column-right">
                     <?php if(!empty($value->opening_hours->open_now)){
                         echo ($value->opening_hours->open_now == 1)?'Open Now !':'Closed';
                     }
@@ -37,7 +86,7 @@ include_once('header.phtml');
                     }
                     ?></p>
                 </div>
-            </div>    
+            </div>
             <?php
                }
                 if(!empty($foundPlace['next_page_token']))
@@ -49,42 +98,27 @@ include_once('header.phtml');
             ?>
         </div>
      </div>
-        
-        
-     
-    <div id="app">
-        <div class="wrapper">
-          <table style="width:100%; text-align: left;">
-            <tr>
-                <th style="text-align: left; width: 33%">name</th>
-                <th style="text-align: left; width: 33%">rating</th>
-                <th style="text-align: left; width: 33%">address</th>
-            </tr>
-              <tr style="text-align: left;" v-for="post in postList">
-                <td style="text-align: left; width: 33%">{{ post.name }}</td>
-                <td style="text-align: left; width: 33%">{{ post.rating }}</td>
-                <td style="text-align: left; width: 33%">{{ post.address }}</td>
-              </tr>
-            </table>
-        </div>
-    </div>
 </div>
-<script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
 <script>
+var link ='http://localhost/be/public/scg/th/find/';
 var app = new Vue({
-  el: '#app',
-  data: {
-    postList: []
-  },
-  mounted(){
-    axios.get('http://localhost/be/public/scg/th/find/')
-        .then((response)=> {
-          this.postList=response.data;
-        })
-  }
+el: '#app',
+data: {
+  postList: []
+},
+mounted: function() {
+var vm = this;
+    this.$http.get(link).then(function(response){
+                this.postList = response.body;
+                console.log(response);
+            }, function(error){
+                console.log(error.statusText);
+            });
+}
 });
 </script>
 <?php
-include_once('footer.phtml');    
+include_once('footer.phtml');
 ?>

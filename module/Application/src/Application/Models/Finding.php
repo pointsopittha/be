@@ -159,7 +159,7 @@ class Finding
     {   
         try
         {
-            $url= 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyAP4ExPP9WsZav-lGimhJ71omKqiQU4Xb0&query=bangsue&region=th&type=restaurant';
+            $url= 'https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyD2u4Jl-xP6t6Bb6rgJIwVEpg33yLPMjfM&query=bangsue&region=th&type=restaurant';
           
             //echo $url;
             $client = new Client($url, array(  
